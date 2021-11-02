@@ -1,0 +1,18 @@
+    Java中的switch case中default里面需不需要加break??? 
+    
+        （1）如果case满足条件，那么执行case语句直到break ， 不会执行default语句 
+
+        （2）如果case不满足条件，那么会执行default语句 
+
+        ①如果default在最上面，执行完所有case没有匹配的之后会执行default里面的语句，直到下一个case里的break 
+
+        ②如果defalut在中间，同上； 
+
+        ③如果default在最后，执行完所有case没有匹配的之后会执行default里面的语句，执行完跳出 
+
+
+        总结：switch的执行是按照从小到大的顺序执行的，最后执行default语句，如果default后面带有break，那么程序就会正常跳出switch，否则，程序会继续向后执行switch语句！也就是说，不管default放在什么位置，它总是在最后一个处理，然后继续向下处理！ 
+
+        所以，最后的处理办法，避免出现以外结果的最好办法就是每一个 
+
+        case以及default语句都要加一个break! 
