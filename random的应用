@@ -1,0 +1,18 @@
+Random随机数 
+
+Random的随机数范围 :  0~0.99999  即 [0,1) 
+Random rd = new Random().nextInt(10);    //范围：[0,10)   猜整数 0~9 
+Random rd = new Random(1).nextInt(10) + 1 ;  //范围：[1,101) 猜整数 1~100 
+
+①如果是猜整数，在0到100中猜，那么 new Random().nextInt(100) + 1 即可
+②如果是在  0到100中猜怎么办？？ 那么  new Random(1).nextInt(101);  //范围： [0,101)   
+③如果是猜整数，在5到87之间猜，怎么办？ 那么 new Random().nextInt(83) + 5 ;   //范围 [0,83) + 5 = [5,87] 
+
+
+Random的写法： 
+//1.声明random对象rd1 
+Random rd1 = new Random(); 
+System.out.println(rd1.nextInt(10)); // [0,10) 
+ 
+//2.用Math包中的random方法 
+int rd2 = (int) (Math.random()*10); 
