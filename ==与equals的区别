@@ -1,0 +1,30 @@
+/**
+ * @authorNewRomantics
+ * @data2021/11/6 15:12
+ *
+ * == 如果是基本类型变量，那么比较的是变量的值
+ *    如果是引用类型的对象，那么比较的是地址
+ * equals  不管是基本类型还是引用类型比较的都是值
+ */
+public class TesEquals {
+    public static void main(String[] args) {
+
+        //1.  ==  比较的是地址
+        //2.  equals 比较的是内容
+
+        //比较的是两个变量时，他们的
+        String a = "abc"; //这是一种不需要new的创建对象方式，对象a创建之后，JVM在常量池中寻找abc，如果没有就新建
+        String b = "abc"; //对象b创建之后，JVM发现常量池中有abc，于是将对象b地址指向abc,于是两个对象a和b的内容和内存地址相同
+        System.out.println(a == b); //true
+        System.out.println(a.equals(b)); //true
+
+        String c = "abc"; //这是一种不需要new的创建对象方式，对象c创建之后，JVM在常量池中寻找abc，如果没有就新建
+        String d = "abcdef"; //对象c创建之后，JVM发现常量池中有没有abcdef，于是在常量池中新建内容为abcdef的内存空间，并将d的地址指向它
+        System.out.println(c == d); //false
+        System.out.println(c.equals(d)); //false
+
+        System.out.println(a == c); //true
+
+
+    }
+}
