@@ -1,0 +1,49 @@
+/**
+ * 1，题目：将一个数组逆序输出，请设计程序。
+ *
+ * 2，题目：有一对兔子，从出生后第3个月起每个月都生一对兔子，
+ * 小兔子长到第三个月后每个月又生一对兔子，假如兔子都不死，问每个月的兔子对数为多少？请设计程序？
+ */
+public class TestWeek {
+    public static void main(String[] args) {
+        //1，题目：将一个数组逆序输出，请设计程序
+        int[] num = new int[]{1,6,9,4,5};
+        reversArray(num);
+        System.out.println(Arrays.toString(num));
+
+        //2，题目：有一对兔子，从出生后第3个月起每个月都生一对兔子，
+        //小兔子长到第三个月后每个月又生一对兔子，假如兔子都不死，问每个月的兔子对数为多少？请设计程序？
+        /*System.out.println("请输入月份：");
+        int month = new Scanner(System.in).nextInt();
+        System.out.println("第" + month + "月的兔子数有 " + bornRabbit(month) + " 对！");*/
+        for (int i = 1; i <= 12; i++) {
+            System.out.println("第" + i + "个月有 " + bornRabbit(i) + " 只兔子！");
+        }
+
+    }
+
+    //逆序输出数组
+    public static int[] reversArray(int[] num){
+        int count = 1;
+        int j =num.length - 1;
+        for (int i = 0; i < num.length; i++) {
+            if(count <= (num.length / 2)){
+                int temp = num[i];
+                num[i] = num[j];
+                num[j] = temp;
+            }
+            count++;
+            j--;
+        }
+        return num;
+    }
+
+    //递归生兔兔
+    public static int bornRabbit(int month){
+       if(month == 1 || month == 2){
+           return 1;
+       }
+           return bornRabbit(month-1) + bornRabbit(month-2);
+    }
+
+}
