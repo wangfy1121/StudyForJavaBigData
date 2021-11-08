@@ -1,0 +1,96 @@
+package TeduTest.Day07;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Vector;
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/8 11:34
+ *
+ * 测试java中数据结构向量vector 的构造及方法
+ */
+public class TestVector {
+    public static void main(String[] args) {
+        /**
+         * 构造方法
+         * 1. Vector();    构造一个空向量，使其内部数据数组的大小为10，其标准容量增量为零
+         * 2.Vector(Collection c);   构造一个包含指定collection中的元素的向量，这些元素按其collection的迭代器返回元素的顺序排列
+         * 3.Vector(int initialCapacity);   使用指定的初始容量和等于零的容量增量构造一个空向量
+         * 4、Vector(int initialCapacity,int capacityIncrement);   使用指定的初始容量和容量增量构造一个空的向量
+         */
+
+
+        Vector v = new Vector();
+        Vector vec = new Vector();
+
+//        Vector vec2 = new Vector(Collection int);
+
+        Vector vec3 = new Vector(5); //初始容量
+
+        Vector vec4 = new Vector(5,2); //初始容量为5，增量为2
+
+        /**
+         * vector中的方法
+         * 1.   boolean add(Object o) 将指定元素添加到此向量的末尾。
+         * 2.   void addElement(Object obj) 将指定元素添加到此向量的末尾,将其大小增加 1
+         * 3.   void add(int index, Object element) 在此向量的指定位置插入指定的元素。
+         * 4.   boolean addAll(Collection c) 将指定 Collection 中的所有元素添加到此向量的末尾，按照指定 collection 的迭代器所返回的顺序添加这些元素。
+         * 5.   int capacity() 返回此向量的当前容量
+         * 6.   void clear() 从此向量中移除所有元素。
+         * 7.   Object clone() 返回向量的一个副本。
+         * 8.   boolean contains(Object elem) 如果此向量包含指定的元素，则返回 true。
+         * 9.   boolean containsAll(Collection c) 如果此向量包含指定 Collection 中的所有元素，则返回 true。
+         * ......
+         * ......
+         */
+
+        v.add(1);
+//        System.out.println(v.add(1)); //true
+        v.add("2");
+        v.add(2.3);
+        v.add("5");
+        vec.addElement(1);
+        vec.addElement("2");
+        vec.addElement(2.3);
+        vec.addElement("5");
+        System.out.println("v: " + v);//[1, 2, 2.3, 5]
+        System.out.println("vec: " + vec);//[1, 2, 2.3, 5]
+        System.out.println(v.equals(vec));//true 比较内容
+
+        //3.void add(int index, Object element) 在此向量的指定位置插入指定的元素。
+        v.add(0,66);//[66, 1, 2, 2.3, 5]
+        v.add(2,9);//[66, 1, 9, 2, 2.3, 5]
+        System.out.println("v: " + v);
+
+        //4.boolean addAll(Collection c) 将指定 Collection 中的所有元素添加到此向量的末尾
+        Collection<Integer> c = new ArrayList<Integer>();
+        c.add(1);
+        c.add(10);
+        c.add(100);
+        System.out.println("c: " + c);//[1, 10, 100]
+
+        vec.addAll(c);
+        System.out.println("vec: " + vec);//[1, 2, 2.3, 5, 1, 10, 100]
+
+        //5. int capacity() 返回此向量的当前容量
+        System.out.println("v capacity: " + v.capacity()); //10   vector在初始化时的容量为10
+        System.out.println("vec capacity: " + vec.capacity()); //10
+
+        // 7.  Object clone() 返回向量的一个副本。
+        Object vecCopy = new Vector();
+        vecCopy = vec.clone();
+        System.out.println("vecCopy: " + vecCopy); //[1, 2, 2.3, 5, 1, 10, 100]
+
+        //8.boolean contains(Object elem)  如果此向量包含指定的元素，则返回 true。
+        System.out.println("vec:" + vec);
+        System.out.println(vec.contains(100)); //true
+        System.out.println(vec.contains(2)); //false
+        //问题：为什么而vec之后新增的元素[1, 10, 100] 用contains方法返回的是true
+        //    而vec向量原本有的元素vec: [1, 2, 2.3, 5] 用contains方法返回的是false
+
+        //9.boolean containsAll(Collection c) 如果此向量包含指定 Collection 中的所有元素，则返回 true。
+        System.out.println(vec.containsAll(c)); //true  vec:[1, 2, 2.3, 5, 1, 10, 100]  c:[1, 10, 100]
+        System.out.println(vec.containsAll(v));// false  v: [66, 1, 9, 2, 2.3, 5]
+    }
+}
