@@ -89,6 +89,10 @@ public class TestVector {
         //问题：为什么而vec之后新增的元素[1, 10, 100] 用contains方法返回的是true
         //    而vec向量原本有的元素vec: [1, 2, 2.3, 5] 用contains方法返回的是false
 
+        /**
+         * 解决：传入向量时 2 是字符型的，所以在contains()方法中应赋值contains("2");
+         */
+
         //9.boolean containsAll(Collection c) 如果此向量包含指定 Collection 中的所有元素，则返回 true。
         System.out.println(vec.containsAll(c)); //true  vec:[1, 2, 2.3, 5, 1, 10, 100]  c:[1, 10, 100]
         System.out.println(vec.containsAll(v));// false  v: [66, 1, 9, 2, 2.3, 5]
