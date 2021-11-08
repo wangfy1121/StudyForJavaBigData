@@ -1,0 +1,53 @@
+package Tedu.oop.Day07;
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/8 14:35
+ *
+ * 本类用于测试代码块，局部代码块
+ * 执行顺序：构造代码块 > 构造方法 > 普通方法 > 局部代码块
+ */
+public class TestBlock {
+    public static void main(String[] args) {
+        System.out.println("今天特别冷，注意保暖");
+        Pig pig = new Pig();
+        pig.eat();
+
+    }
+}
+
+class Pig{
+    String food;
+    int age;
+
+    /**
+     * 创建构造代码块： {}
+     * 1.位置：类里方法外
+     * 2.执行时机：每次创建对象时都会执行构造代码块，并且优先于构造方法执行
+     * 3.作用：用于提取所有构造方法的共性功能
+     *
+     */
+    {
+        System.out.println("我是一个构造代码块！");
+    }
+
+    //重载无参构造方法
+    public Pig() {
+        System.out.println("无参构造方法");
+    }
+
+    public void eat(){
+        System.out.println("小猪爱吃菜叶子");
+
+        /**
+         * 创建局部代码块： {}
+         * 1.位置：在方法中
+         * 2.执行时机：调用本局部代码块所在的方法时才会执行
+         * 3.作用：用于控制变量的作用范围，变量的作用范围越小越好
+         */
+        {
+            System.out.println("我是一个局部代码块！");
+        }
+
+    }
+}
