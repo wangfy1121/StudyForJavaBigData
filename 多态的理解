@@ -1,0 +1,114 @@
+结论：①多态对象创建的前提：继承+重写 
+
+     ②多态对象调用成员变量时，调用的是父类的成员变量 
+
+           调用方法时，只要父类中的方法被子类重写了，不被super调用的都是 调用的子类方法，
+           除非父类方法是静态资源，不能被子类 重写，那么调用的是父类的静态方法 
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/9 17:03
+ *
+ * 本类用于完成汽车设计案例,理解多态
+ */
+public class DesignCar {
+    public static void main(String[] args) {
+        //纯纯的父类对象
+        Carr c = new Carr();
+        System.out.println(c.getColor());//null
+        c.start();
+        c.stop();
+//        c.swim()  父类对象不可以使用子类特有的功能
+
+        //纯纯的子类对象
+        BMW b = new BMW();
+        System.out.println(b.color); //五彩斑斓的黑
+        System.out.println(b.getColor());//null
+        b.start();//调用子类重写的方法
+        b.stop();//调用父类中的方法，未被子类重写
+
+        //动态对象
+        Carr carr = new TSL();
+//        System.out.println(carr.color);  动态对象调用成员变量时，调用的是父类的成员变量，而父类的成员变量被封装了，所以无法调用
+        System.out.println(carr.getColor());// 使用get方法获取依然为null，因为动态对象依旧不会去子类调用，而是去父类
+        carr.start();//子类未重写，调用的是父类的方法
+        carr.stop();//子类重写了，所以调用的是被重写之后的方法
+
+//        carr.swim(); 动态对象无法调用子类特有的方法
+        TSL tsl = (TSL) carr; //将动态对象强转成TSL对象之后就可以调用子类特有方法了
+        tsl.swim();
+
+
+    }
+}
+
+class Carr{
+    private int id;//编号
+    private String brand;
+    private String color;
+    private double price;
+
+    public void start(){
+        System.out.println("骑上我心爱的小车车~");
+    }
+
+    public void stop(){
+        System.out.println("小车车停下来了！");
+    }
+
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+}
+
+class BMW extends Carr{
+    String color = "五彩斑斓的黑色";
+
+    @Override
+    public void start() {
+        System.out.println("都让开，我的车要起飞了！");
+    }
+}
+
+class TSL extends Carr{
+    String color = "黑不溜秋的白";
+
+    @Override
+    public void stop(){
+        System.out.println("唉呀妈呀，怎么刹不住");
+    }
+
+    public void swim(){
+        System.out.println("没想到吧？我还是个潜水艇！");
+    }
+}
