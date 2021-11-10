@@ -1,0 +1,181 @@
+抽象相关知识：
+
+/**【class1】
+     *  1.被abstract关键字修饰的方法称为抽象方法，抽象方法没有方法体
+     *  2.被abstract关键字修饰的类是抽象类，如果一个类中包含了抽象方法，那么这个类必须声明为抽象类
+     *  3.当一个子类继承了抽象父类时，有两种方案：
+     *      方案一：子类变成抽象类，子类也不实现，继续抽象
+     *      方案二：子类依然是普通子类，实现抽象父类中的所有抽象方法，”父债子偿“
+     *
+     */
+    
+/**【class2】
+ * @authorNewRomantics
+ * @data2021/11/10 15:29
+ *
+ * 本类用于抽象类中构造方法的测试
+ *  1. 抽象类可以实例化对象吗？——不可以
+ *  2. 抽象类不能实例化对象的话，有构造方法吗？——抽象类有构造方法，也可以重载含参构造方法
+ *  3. 那为什么抽象类有构造方法呢？——抽象类不是为了自己创建对象时使用，而是为了子类创建对象时，能够调用父类的构造方法super();
+ *  4.【问题：那为什么子类会用super调用父类的构造方法？？
+ *      回答：请注意正解来了！请注意正解来了！请注意正解来了！
+ *          这个是Java的规定：子类继承父类，子类的构造方法必须调用super（）即父类的构造方法，而且必须放在构造方法的第一行。
+ *          所以，父类没有重载含参构造方法时，父类会默认生成无参构造，子类也会默认调用无参构造
+ *          如果父类重载了自己的无参构造，变成了有参构造，那么子类一定要在自己的构造方法中使用super调用父类的含参构造，这是规定】
+ */
+
+/**[【class3】
+ * @authorNewRomantics
+ * @data2021/11/10 16:05
+ *
+ * 本类用于抽象类中的成员测试
+ *  1.抽象类可以定义成员变量吗？——可以
+ *  2.抽象类可以吃定义成员常量（final修饰）吗？——可以
+ *  3.抽象类中可以有普通方法吗？——可以
+ *  4.如果一个类中都是普通方法，那他为啥还要被声明成抽象类呢？——因为抽象类不可以被实例化，如果不想被外界创建本类的对象
+ *                                                                       就可以把普通类声明成抽象类
+ */
+
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/10 14:43
+ */
+public class AbstractDemo {
+    public static void main(String[] args) {
+        //抽象类不可以创建对象(实例化)
+        //创建多态对象进行测试
+        Animal pig = new Pig();
+        pig.eat();//eat()未被子类重写，调用的是父类的抽象方法
+        pig.fly2();//调用子类实现了的抽象父类的方法
+        System.out.println(pig.a);
+
+    }
+}
+
+abstract class Animal{
+
+    int a;
+    public void eat(){
+        System.out.println("吃啥都行！");
+    }
+
+    public void play(){
+        System.out.println("玩啥都行！");
+    }
+
+    //创建抽象方法
+    /**
+     *  1.被abstract关键字修饰的方法称为抽象方法，抽象方法没有方法体
+     *  2.被abstract关键字修饰的类是抽象类，如果一个类中包含了抽象方法，那么这个类必须声明为抽象类
+     *  3.当一个子类继承了抽象父类时，有两种方案：
+     *      方案一：子类变成抽象类，子类也不实现，继续抽象
+     *      方案二：子类依然是普通子类，实现抽象父类中的所有抽象方法，”父债子偿“
+     *
+     */
+    public abstract void fly();
+    public abstract void fly2();
+
+}
+
+class Pig extends Animal{
+
+    int a = 1;
+
+    @Override
+    public void fly() {
+
+    }
+
+    @Override
+    public void fly2() {
+        System.out.println("抽象父类中的所有方法都需要被实现！");
+    }
+}
+
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/10 15:29
+ *
+ * 本类用于抽象类中构造方法的测试
+ *  1. 抽象类可以实例化对象吗？——不可以
+ *  2. 抽象类不能实例化对象的话，有构造方法吗？——抽象类有构造方法，也可以重载含参构造方法
+ *  3. 那为什么抽象类有构造方法呢？——抽象类不是为了自己创建对象时使用，而是为了子类创建对象时，能够调用父类的构造方法super();
+ *  4.【问题：那为什么子类会用super调用父类的构造方法？？
+ *      回答：请注意正解来了！请注意正解来了！请注意正解来了！
+ *          这个是Java的规定：子类继承父类，子类的构造方法必须调用super（）即父类的构造方法，而且必须放在构造方法的第一行。
+ *          所以，父类没有重载含参构造方法时，父类会默认生成无参构造，子类也会默认调用无参构造
+ *          如果父类重载了自己的无参构造，变成了有参构造，那么子类一定要在自己的构造方法中使用super调用父类的含参构造，这是规定】
+ */
+public class AbstractDemo2 {
+    public static void main(String[] args) {
+//        Animal2 am2 = new Animal2(); //报错，因为抽象类不可以实例化对象
+        Animal2 am2 = new Pig2();
+
+    }
+}
+
+abstract class Animal2{
+
+    public Animal2() {
+        System.out.println("我是抽象父类Animal2的构造方法");
+    }
+}
+
+class Pig2 extends Animal2{
+
+    public Pig2() {
+//        super();//表示调用父类的无参构造
+        System.out.println("我是Pig2类的构造方法");
+    }
+}
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/10 16:05
+ *
+ * 本类用于抽象类中的成员测试
+ *  1.抽象类可以定义成员变量吗？——可以
+ *  2.抽象类可以吃定义成员常量（final修饰）吗？——可以
+ *  3.抽象类中可以有普通方法吗？——可以
+ *  4.如果一个类中都是普通方法，那他为啥还要被声明成抽象类呢？——因为抽象类不可以被实例化，如果不想被外界创建本类的对象
+ *                                                                       就可以把普通类声明成抽象类
+ *
+ */
+public class AbstractDemo3 {
+    public static void main(String[] args) {
+        Fruit apple = new Apple();
+        apple.clean();
+        apple.grow();
+        apple.grow2();
+    }
+}
+
+abstract class Fruit{
+    int a = 1;
+    final int MAX_COUNT = 100;
+
+    //抽象类中的普通方法
+    public void clean(){
+        System.out.println("水果还是要洗洗再吃的！");
+    }
+
+    public abstract void grow();
+    public abstract void grow2();
+
+}
+
+class Apple extends Fruit{
+
+    @Override
+    public void grow() {
+        System.out.println("子类的grow方法");
+    }
+
+    @Override
+    public void grow2() {
+        System.out.println("子类的grow2方法");
+
+    }
+}
