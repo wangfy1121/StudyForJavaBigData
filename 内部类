@@ -1,0 +1,303 @@
+【结论】
+（1）1. 根据内部类的位置不同，分为：成员内部类，局部内部类 
+        成员内部类在方法外，局部内部类在方法里 
+    2.内部类可以直接使用外部类的资源,而外部类不能直接使用内部类的资源，只能先创建内部类对象再来调取内部类资源 
+        如果在外部类里创建内部类对象：直接创建：Inner in = new Inner(); 
+        如果在外部类外创建内部类对象（main）：先创建外部类对象再用外部类对象创建内部类对象： 
+        Outer outer = new Outer(); 
+        Outer.Inner inner = outer.new Inner();//创建内部类对象 
+        
+（2）如果用private修饰内部类，那么就不能直接使用内部类的资源，只能在外部类中使用内部类的资源，
+    将内部类的私有方法放到外部类中public方法中，利用外部类对象调用公有方法，间接使用私有的内部类方法 
+（3）静态内部类不需要先创建外部对象，而是要先通过外部类的类名找到内部类，再创建内部类对象 
+（4）如果静态内部类中有静态方法，那么可以通过链式加载的方式调用 
+    【总结3,4】 
+    【问题】内部类被static修饰以后，new Outer3() 报错 
+     1.静态内部类不需要先创建外部对象，而是要先通过外部类的类名找到内部类，再创建内部类对象 
+     2.访问静态内部类中的静态资源： 
+        Outer3.Inner3.play() 
+        【这种通过类名重复加载静态资源就叫做链式加载】 
+（5） 如何使用局部内部类资源 
+      1.【注意】直接调用局部内部类所处的外部类方法show(),并不会触发内部类的功能 需要在外部类中创建内部类的对象并进行调用，才能触发内部类的功能 
+      2.【注意】直接创建外部类对象，调用局部内部类所处的方法时，并不会触发内部类 的功能，需要在内部类所处的方法中，创建内部类对象，并调用其功能，功能才会被触发 
+ （6）匿名内部类 
+      匿名内部类没有名字，匿名对象只能使用一次，一次只能调用一个功能 
+      匿名内部类实际充当了实现类的功能，去实现未实现的方法，只是没有名字而已 
+
+
+
+【class 1】
+/**
+ * @authorNewRomantics
+ * @data2021/11/11 15:35
+ *
+ * 本类用作内部类的入门案例
+ *
+ *      1.根据内部类的位置不同，分为：成员内部类，局部内部类
+ *          成员内部类在方法外，局部内部类在方法里
+ *      2.内部类可以直接使用外部类的资源,
+ *        而外部类不能直接使用内部类的资源，只能先创建内部类对象再来调取内部类资源
+ *
+ *        如果在外部类里创建内部类对象：直接创建：Inner in = new Inner();
+ *        如果在外部类外创建内部类对象：先创建外部类对象再用外部类对象创建内部类对象：
+ *                              Outer outer = new Outer();
+ *                              Outer.Inner inner = outer.new Inner();//创建内部类对象
+ *
+ *
+ */
+public class TestInnerClass1 {
+    public static void main(String[] args) {
+
+        //也可以这么写Outer.Inner oi = new Outer().new Inner();
+
+        Outer outer = new Outer();//外部类对象
+        Outer.Inner inner = outer.new Inner();//用外部类创建内部类对象
+
+        outer.find();//外部类调用外部方法
+        inner.delete();//内部类调用类部方法
+    }
+}
+
+//外部内
+class Outer {
+    String name;
+    private int age;
+
+//    Inner in = new Inner(); 外部类可以直接创建内部类对象
+
+    public void find() {
+        System.out.println("外部类的find()方法");
+    }
+
+    //成员内部类，可以看做是外部类的特殊成员
+    class Inner {
+
+        int sum = 10;
+
+        public void delete() {
+            System.out.println("内部类的delete()方法");
+
+            //内部类可以直接调用外部类的成员变量和成员方法
+//            find();
+            System.out.println(name);
+            System.out.println(age);
+        }
+
+
+    }
+}
+
+【class 2】
+/**
+ * @authorNewRomantics
+ * @data2021/11/11 16:26
+ *
+ * 本类用于测试成员内部类被private修饰
+ *
+ *      1.如果用private修饰内部类，那么就不能直接使用内部类的资源，只能在外部类中使用内部类的资源
+ *        将内部类的私有方法放到外部类中public方法中，利用外部类对象调用公有方法，间接使用私有的内部类方法
+ */
+public class TestInnerClass2 {
+    public static void main(String[] args) {
+
+//        Outer2.Inner2 oi = new Outer2().new Inner2();//创建内部类对象
+//        oi.eat();
+
+        //使用外部类的公共方法调用私有内部类的资源
+        Outer2 outer2 = new Outer2();
+        outer2.eatrOuter();
+    }
+}
+
+class Outer2{
+
+    //那么在外部类中声明一个方法,创建内部类对象然后调用内部类中私有的方法
+    public void eatrOuter(){
+        Inner2 inner2 = new Inner2();
+        inner2.eat();
+    }
+
+
+    //私有内部类之后不能直接使用
+    private class Inner2{
+        public void eat(){
+            System.out.println("内部类的eat()方法");
+        }
+    }
+
+
+}
+【class 3】
+/**
+ * @authorNewRomantics
+ * @data2021/11/11 17:06
+ *
+ * 本类用于测试内部类被static修饰
+ *    【问题】内部类被static修饰以后，new Outer3() 报错
+ *      1.静态内部类不需要先创建外部对象，而是要先通过外部类的类名找到内部类，再创建内部类对象
+ *
+ *      2.访问静态内部类中的静态资源：
+ *          Outer3.Inner3.play()
+ *
+ *         【这种通过类名重复加载静态资源就叫做链式加载】
+ */
+public class TestInner3 {
+    public static void main(String[] args) {
+
+        //先创建Outer3对象再创建Inner3对象
+//        Outer3.Inner3 oi = new Outer3().new Inner3();
+//        oi.show();
+
+        //也可以使用匿名对象的方式
+//        new Outer3().new Inner3().show();
+
+
+        //内部类用static修饰变成静态资源之后
+        //使用Outer3类名创建内部类对象
+//        Outer3.Inner3 oi = new Outer3.Inner3(); //此处和上面第13行不同，此处没有创建Outer3对象，而是通过类名创建内部类对象
+        //也可以用匿名对象的方式
+
+//        new Outer3.Inner3().show();
+
+         Outer3.Inner3.play();//链式加载
+
+    }
+}
+
+class Outer3{
+
+    static class Inner3{
+
+        public void show(){
+            System.out.println("内部类的show()");
+        }
+
+        static public void play(){
+            System.out.println("静态内部类的静态方法");
+        }
+
+    }
+}
+
+【class 4】
+/**
+ * @authorNewRomantics
+ * @data2021/11/11 17:32
+ *
+ * 本类用于测试局部内部类
+ *
+ *  如何使用局部内部类资源
+ *  1.【注意】直接调用局部内部类所处的外部类方法show(),并不会触发内部类的功能
+ *      需要在外部类中创建内部类的对象并进行调用，才能触发内部类的功能
+ *  2.
+ *     【注意：】直接创建外部类对象，调用局部内部类所处的方法时，并不会触发内部类
+ *     的功能，需要在内部类所处的方法中，创建内部类对象，并调用其功能，功能才会被触发
+ *    举例： 在show()方法里，Inner4()加载结束之后，再创建局部内部类对象
+ *
+ *
+ */
+public class TestInner4 {
+    public static void main(String[] args) {
+        Outer4 outer4 = new Outer4();
+        outer4.show();//啥也没有，没有打印局部内部类
+
+    }
+}
+
+class Outer4{
+
+    int sum = 10;
+    public void show(){
+
+        //局部内部类，方法体中的类
+        class Inner4{
+            String name;
+            int age;
+            int sum = 100;
+
+            public void eat(){
+                System.out.println("局部内部类的eat()方法");
+            }
+
+        }
+
+        Inner4 inner4 = new Inner4();
+        inner4.eat();
+
+
+
+    }
+
+【class 5】
+/**
+ * @authorNewRomantics
+ * @data2021/11/11 17:47
+ *
+ *  本类用于测试匿名内部类
+ *  匿名内部类没有名字，匿名对象只能使用一次，一次只能调用一个功能
+ *  匿名内部类实际充当了实现类的功能，去实现未实现的方法，只是没有名字而已
+ *
+ */
+public class TestInner5 {
+    public static void main(String[] args) {
+        //匿名对象调用普通方法
+        new Inter5().study();
+        new Inter5().powerUp();
+
+
+        //匿名内部类，创建的是抽象类的对象
+
+        new Inter4(){
+            @Override
+            public void eat() {
+                System.out.println("干饭");
+            }
+        }.play();
+
+
+        //匿名内部类，创建的是接口的对象
+        new Inter6(){
+
+            @Override
+            public void add() {
+
+            }
+
+            @Override
+            public void delete() {
+
+            }
+        }.add();
+
+
+
+
+    }
+}
+
+//创建接口
+interface Inter6{
+    void add();
+    void delete();
+}
+
+//创建抽象类
+abstract class Inter4{
+    public abstract void eat();
+    public  void play(){
+        System.out.println("玩代码~");
+    }
+}
+
+
+//创建普通类
+class Inter5{
+    public void study(){
+        System.out.println("没有什么能够阻挡，我对赚钱的向往");
+    }
+
+    public void powerUp(){
+        System.out.println("加油！我们会越来越强的！");
+    }
+
+}
