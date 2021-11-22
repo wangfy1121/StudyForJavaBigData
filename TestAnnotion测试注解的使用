@@ -1,0 +1,102 @@
+测试注解的使用：
+结论：
+    测试1：分别给TestAnno类/name属性/eat方法  添加Rice注解
+        结论：属性上的注解报错了，说明自定义注解可以加在什么位置，由@Target决定
+
+        测试2：当我们给Rice注解添加了一个age属性以后，@Rice注解使用时直接报错
+        结论：当注解没有定义属性时，可以直接使用
+             当注解定义了属性以后，必须给属性赋值
+
+        测试3：给age属性赋予默认值以后，就可以直接使用Rice注解了    int age() default 10;
+              不需要给age属性赋值了，此时age属性的值就是默认值10
+
+        测试4：给Rice注解添加了特殊属性value以后，必须给属性赋值
+              只不过特殊属性赋值时可以简写成：@Rice("Apple")
+
+        测试5：如果特殊属性也赋予了默认值，那么可以不赋值直接使用注解，
+              但是如果想要给注解的所有属性赋值，每条赋值语句包括特殊属性，都不可以简写
+     
+
+package Tedu.api.Day17_Annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * @authorNewRomantics
+ * @data2021/11/22 17:01
+ *
+ * 本类用于注解的学习————自定义注解
+ */
+public class TestAnnotation {
+    public static void main(String[] args) {
+
+    }
+}
+
+
+/*
+    1.首先注意：注解定义的语法与java不同
+    2.定义自定义注解的格式：@interface 注解名
+    3.我们使用”ElementType.静态常量“ 的方式来指定自定义注解具体可以加在什么位置
+      而且，这里的值可以写多个，格式@Target({ElementType.XX1,ElementType.XX2})
+    4.我们通过@Retention元注解规定自定义注解的生命周期
+        注意：这个值只能写一次：SOURCE  CLASS  RUNTIME  3选1
+    5.注意：int age(); 不是方法的定义，而是给自定义注解添加了一个age属性
+
+ */
+
+
+//1.自定义注解
+//2.通过@Target注解标记自定义注解可以使用的位置
+//3.通过@Retention注解标记自定义注解的生命周期
+
+@Retention(RetentionPolicy.RUNTIME)//到运行时都有效
+@Target({ElementType.TYPE,ElementType.METHOD})
+@interface Rice{
+    //5.给注解进行功能增强————添加注解的属性
+//    int age();//注意：int age(); 不是方法的定义，而是给自定义注解添加了一个age属性
+    int age() default 10; //给普通属性age赋予默认值10;
+
+    //6.给自定义注解添加特殊属性value
+    String value() default "Apple";//定义一个特殊属性value，类型是String
+    /*
+        自定义注解中还可以添加特殊属性value
+        特殊属性默认值的的赋予方式和普通方式一致
+     */
+}
+
+//@Rice 不报错
+//4.定义一个测试类，用于测试自定义注解
+class TestAnno{
+    /*
+        测试1：分别给TestAnno类/name属性/eat方法  添加Rice注解
+        结论：属性上的注解报错了，说明自定义注解可以加在什么位置，由@Target决定
+
+        测试2：当我们给Rice注解添加了一个age属性以后，@Rice注解使用时直接报错
+        结论：当注解没有定义属性时，可以直接使用
+             当注解定义了属性以后，必须给属性赋值
+
+        测试3：给age属性赋予默认值以后，就可以直接使用Rice注解了    int age() default 10;
+              不需要给age属性赋值了，此时age属性的值就是默认值10
+
+        测试4：给Rice注解添加了特殊属性value以后，必须给属性赋值
+              只不过特殊属性赋值时可以简写成：@Rice("Apple")
+
+        测试5：如果特殊属性也赋予了默认值，那么可以不赋值直接使用注解，
+              但是如果想要给注解的所有属性赋值，每条赋值语句包括特殊属性，都不可以简写
+     */
+
+//    @Rice 报错
+    String name;
+
+//    @Rice(10) 报错
+//    @Rice(age = 10)
+//    @Rice("Apple")
+    @Rice(age = 10,value = "banana")
+    public void eat(){
+        System.out.println("一会儿又能干饭了！");
+    }
+}
