@@ -1,0 +1,185 @@
+反射学习
+
+
+1.反射 
+（1）获取字节码对象 
+
+     Class.forName(“类的全路径”); 
+
+     类名.class 
+
+     对象.getClass(); 
+
+ 
+
+@Test 
+public void getCIazz() throws ClassNotFoundException { 
+= .api.Day18 . 
+clazzl 
+clazz2 
+= . class 
+- new Student() 
+clazz3 - 
+Class . ; 
+ 
+
+（2）利用反射创建对象 
+
+1.使用无参构造 clazz.newInstance( ) 
+
+2.使用含参构造 
+
+①先获取对应的构造函数对象clazz.getConstructor(String.class, int.class); 
+
+/ / 2 ． 涌 过 字 节 码 对 象 创 建 目 标 类 的 对 象 
+/ * 反 射 创 建 对 象 的 方 案 1 ： 涌 过 字 节 码 对 象 触 
+一 米 、 无 参 造 
+clazz.newlnstance 〔 〕 ． / / 涌 过 无 参 构 造 创 建 
+Object 0 
+System.out.pnntln 〔 o);//Student{name='nutt' ， age=@} 
+创 建 对 象 * / 
+ 
+
+②再通过这个构造函数对象创建对象 
+
+c.newInstance(“张三”，666)； 
+
+/ * 反 射 创 建 对 象 的 方 案 2 ： 涌 过 触 发 目 标 类 中 的 其 他 的 否 0 构 造 创 建 对 象 
+》 1 ． 先 获 取 指 定 的 造 函 数 对 象 ， 注 意 传 入 对 应 的 造 函 数 参 数 ， 传 入 的 是 字 节 码 山 
+地 ） 2 ． 涌 过 刚 刚 获 到 的 造 函 数 对 象 来 创 建 目 标 类 Student 的 对 象 
+/ / 5 ． 获 取 目 标 类 中 定 的 全 造 
+COnStrlJCtOP<?> C 
+c azz getConstruc 0 「 Strxng.class, 
+/ / 4 ． 涌 过 刚 刚 获 取 到 的 松 吉 函 数 对 象 来 创 建 目 类 的 对 象 
+Object 01 = c.newlnstance 〔 ...initargs: ． 赵 六 " ， 6); 
+System.out.prlntln 〔 01L 
+int.class); 
+ 
+
+【注意】 
+
+1.之前是创建对象是调用一个类的构造函数（无参/全参）去创建 
+
+2.反射技术创建对象 
+      使用newInstance()方法，创建无参构造的对象时可以直接使用字节码对象clazz.newInstance() 
+      但是创建含参构造对象时，需要找到含参构造的构造方法                Constructor c = clazz.getConstructor(Type.class...) 
+     传入的是参数类型的字节码对象，获取到构造方法对象时， 
+
+      再使用这个构造方法对象c来创建对象  
+
+      Object o = c.newInstance(Type...) 
+
+ 
+
+（3）利用暴力反射给目标类私有属性赋值 
+
+（第一步永远是获取字节码对象） 
+
+ 
+
+1.获取私有属性 
+
+获取字节码对象clazz 
+
+获取指定的私有属性clazz.getDeclaredField(" "); 传入属性名 
+
+设置属性的可访问权限setAcessible(true); 
+
+ 
+
+2.获取对象 
+
+使用反射获取一个对象clazz.newInstance( ); 
+
+ 
+
+3.赋值 
+
+field.set(obj," ")； 第一个参数是对象 
+
+                             第二个参数是这个对象的field属性的值 
+
+ 
+
+4.查看这个对象的属性值 
+
+field.get(obj);       属性.get(对象) 
+
+ 
+
+/ / 1 ． 获 取 字 节 码 对 象 
+Class<?> 
+person.class; 
+/ / 2 ． 获 取 指 定 的 私 有 属 性 注 意 要 传 入 指 定 的 参 数 ， 并 且 要 抛 出 异 常 
+clazz getDecIaredF1eId 〔 name: "name"); 
+Field field 
+/ / 5 ． 直 接 打 印 刚 刚 获 取 到 的 属 性 对 象 
+System.out.prlntln 〔 field 〕 ； 
+/ / 4 ． 涌 过 刚 刚 获 取 到 的 私 有 属 性 对 象 ， 查 看 它 的 类 型 
+System.out.pnntln 〔 fleId.getType 〔 〕 );//class java.tang.Str 、 ing 字 节 码 对 象 
+System.out.pnntln 〔 fleId.getType().getName());//java.Uang.Str 、 ing 
+@ / * * 设 肯 属 性 值 对 象 0 万 ， 对 象 的 某 个 属 性 ield ， 什 么 值 set * * / 
+/ / 5 ． 给 刚 刚 获 取 到 的 字 段 对 象 ， 设 置 属 性 值 、 
+/ / 5 ． 1 需 要 指 定 到 底 是 给 哪 个 对 象 的 name 属 性 设 置 值 ， 没 有 对 象 创 建 对 象 
+clazz.newlnstance 〔 ); 
+Object 0b 〕 
+/ / 暴 力 反 射 ， 需 要 设 置 私 有 可 见 的 权 限 
+fleId.setAccessibIe 〔 true 〕 ； 
+/ / 利 用 反 射 给 刚 刚 获 取 到 的 字 段 对 象 设 置 属 性 值 
+/ / field 就 是 我 们 刚 刚 获 取 到 的 name 属 性 
+^ 、 的 name 属 性 设 值 ， n 是 具 体 设 置 的 值 是 什 么 
+field.set 〔 obj," 张 文俊" 〕 ； 
+/ / 打 印 查 看 刚 刚 设 置 的 属 性 值 
+//field.get(m 〕 --field* 示 的 是 nameu 性 ， m 代 表 刚 刚 给 哪 个 对 象 设 置 值 
+System.out.prlntln 〔 letd.get 〔 Obj 〕 ); 
+ 
+
+ 
+
+（4）利用暴力反射调用私有方法（第一步永远是获取字节码对象） 
+
+ 
+
+1.获取对象 
+
+获取字节码对象  Person<?> clazz = Person.class; 
+
+利用字节码对象创建一个操作对象 
+
+Object o = clazz.newInstance( ); 
+
+ 
+
+2.获取私有方法 
+
+ 
+
+利用字节码对象获取私有方法: 
+
+  Method method = clazz.getDeclarMethod( " 方法名 " ，形参.class  ); 
+
+ 
+
+暴力反射需要设置访问权限 
+
+  Method.setAccessible(true); 
+
+ 
+
+【注意】如果不知道目标类中有哪些私有方法，可以使用clazz.getDeclarMethods( ); 获取所有私有方法，使用高效for循环遍历获得所有私有方法的名字getName( ) 
+
+ 
+
+3.传入参数 
+
+使用invoke()方法传入参数 
+
+ 
+
+invoke(o,x,y,z...),表示通过反射技术给对应的对象执行指定的方法 
+o: 指的就是对应的对象 
+x,y,z... : 执行对应方法时需要和参入的参数 
+
+ 
+
+method.invoke(o , 实参，...); 
