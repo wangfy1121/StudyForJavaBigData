@@ -1,0 +1,110 @@
+表关联
+	（1）表的关系
+				• 一对一
+				• 一对多
+				• 多对一
+				• 多对多
+				
+	（2）多表联查
+			查询时，可能一张表无法满足查询需求，就需要联合多张表进行查询
+			
+		1）方式1：笛卡尔积
+					SELECT * FROM students,courses;
+			笛卡尔积(Cartesian product)，又称直积。一般笛卡尔积没有实际的业务意义，但多表查询都是先生成笛卡尔积，再进行数据的筛选过滤。这点很值得注意，实际开发中尽量少用多表联查，其根本原因就在这里，查询过程中，现在内存中构建一个大大的结果集，然后再进行数据的过滤。那这个构建过程，和所使用的内存资源，包括过滤时的判断，都是既耗费资源，又浪费时间。
+			这就是阿里规范中禁止3张表以上的联查的原因。
+			
+			【理解笛卡尔积】
+				表A：a,b,c
+				表B：a,b,d,e,f
+				笛卡尔积：aa ,ab,ad,ae,af
+						    ba,bb,bd,be,bf
+						    ca,cb,cd,ce,cf
+						
+				笛卡尔积生成的表没有实际意义，只是把多表的数据拼接在一起，通常要加上where 表1.字段名 = 表2.字段名
+				使两张表建立联系，然后再在组合之后的表中查
+						
+				加上where的笛卡尔积：
+					Select * from A,B where A.a = B.a;
+					
+					得到 aa,ab
+				 
+					举例：
+					
+					
+					
+					
+					
+			             
+					#练习4：查询在research部门工作的员工的信息
+					SELECT emp.* FROM emp,dept
+					WHERE emp.deptno = dept.deptno
+					AND dept.dname = 'research';
+						
+		2)方式2：join  on, 连接原则：小表驱动大表
+			join用于连接两表，on用于表示两表之间的关系
+			
+				#练习1：查询在一区办公的员工名字
+				SELECT emp.ename FROM emp JOIN dept
+				ON emp.deptno =  dept.deptno
+				WHERE dept.loc = '一区';
+				
+				1) Inner join内连接，取交集
+				2) Left join 左连接，取左表所有和右表满足on之后条件的记录
+				3) Right join 右连接，取右表所有和左表满足on之后条件的记录
+				
+				
+				举例：
+				
+				
+				
+
+				SELECT * FROM emp INNER JOIN dept     
+				ON emp.deptno = dept.deptno;
+				求交集，emp.deptno有1,2
+						dept.deptno有1234那么求交集就是12
+						
+				
+				SELECT * FROM emp LEFT JOIN dept
+				ON emp.deptno = dept.deptno;
+				求左连接，emp.deptno有1,2
+						     dept.deptno有1234，那么求左连接就是emp中所有deptno为1,2的以及dept中deptno的1,2
+						
+				
+				SELECT * FROM emp RIGHT JOIN dept
+				ON emp.deptno = dept.deptno;
+				右连接原理同上，没有值得赋null
+						
+				
+				
+				【注意】
+				一般无论是left jion 还是right join 的查询结果都是以join左边的表结构为主，因此我们在连接查询
+				的时候尽量让join左边的表结构简单一些，因为左边表都会被查询，而右边表结构可以庞大一些，
+				因为我们是在右边表中查询数据然后匹配到左边表
+				所以连接查询的原则是：（或者说是优化方案）小表驱动大表。
+	
+		3）子查询
+				子查询是指嵌入在其他select语句中的select语句，也叫嵌套查询。子查询执行效率低慎用。
+				记录少时效率影响不大、图方便直接使用，记录多时最好使用其它方式替代。
+				
+			
+				#多表连接查询方式3：子查询
+				#练习1：查询accounting部门的员工信息
+				#第一次查：根据部门名称查部门编号——查dept
+				SELECT deptno FROM dept WHERE dname = 'accounting';
+				#第二次查：根据部门编号查员工信息——查emp
+				SELECT * FROM emp WHERE deptno = 1;
+				#嵌套查询
+				SELECT * FROM emp WHERE deptno = (
+					SELECT deptno FROM dept WHERE dname = 'accounting');
+				
+				#练习2：查询tony所在的部门名称
+				SELECT dname FROM dept WHERE deptno = (
+					SELECT deptno FROM emp WHERE ename = 'tony');
+					
+				#练习4：查询高于平均薪资的员工信息
+				SELECT * FROM emp WHERE sal>(
+					SELECT AVG(sal) FROM emp);
+	
+				in表示多个值
+				Select ename from emp where deptno = 2,3 错误
+Select ename from emp where deptno IN（ 2,3 ）正确 
