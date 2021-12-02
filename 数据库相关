@@ -1,0 +1,300 @@
+1.表关联
+	（1）表的关系
+				• 一对一
+				• 一对多
+				• 多对一
+				• 多对多
+				
+	（2）多表联查
+			查询时，可能一张表无法满足查询需求，就需要联合多张表进行查询
+			
+		1）方式1：笛卡尔积
+					SELECT * FROM students,courses;
+			笛卡尔积(Cartesian product)，又称直积。一般笛卡尔积没有实际的业务意义，但多表查询都是先生成笛卡尔积，再进行数据的筛选过滤。这点很值得注意，实际开发中尽量少用多表联查，其根本原因就在这里，查询过程中，现在内存中构建一个大大的结果集，然后再进行数据的过滤。那这个构建过程，和所使用的内存资源，包括过滤时的判断，都是既耗费资源，又浪费时间。
+			这就是阿里规范中禁止3张表以上的联查的原因。
+			
+			【理解笛卡尔积】
+				表A：a,b,c
+				表B：a,b,d,e,f
+				笛卡尔积：aa ,ab,ad,ae,af
+						    ba,bb,bd,be,bf
+						    ca,cb,cd,ce,cf
+						
+				笛卡尔积生成的表没有实际意义，只是把多表的数据拼接在一起，通常要加上where 表1.字段名 = 表2.字段名
+				使两张表建立联系，然后再在组合之后的表中查
+						
+				加上where的笛卡尔积：
+					Select * from A,B where A.a = B.a;
+					
+					得到 aa,ab
+				 
+					举例：
+					     
+					#练习4：查询在research部门工作的员工的信息
+					SELECT emp.* FROM emp,dept
+					WHERE emp.deptno = dept.deptno
+					AND dept.dname = 'research';
+						
+		2)方式2：join  on, 连接原则：小表驱动大表
+			join用于连接两表，on用于表示两表之间的关系
+			
+				#练习1：查询在一区办公的员工名字
+				SELECT emp.ename FROM emp JOIN dept
+				ON emp.deptno =  dept.deptno
+				WHERE dept.loc = '一区';
+				
+				1) Inner join内连接，取交集
+				2) Left join 左连接，取左表所有和右表满足on之后条件的记录
+				3) Right join 右连接，取右表所有和左表满足on之后条件的记录
+				
+				
+				举例：
+				
+				
+				
+
+				SELECT * FROM emp INNER JOIN dept     
+				ON emp.deptno = dept.deptno;
+				求交集，emp.deptno有1,2
+						dept.deptno有1234那么求交集就是12
+						
+				
+				SELECT * FROM emp LEFT JOIN dept
+				ON emp.deptno = dept.deptno;
+				求左连接，emp.deptno有1,2
+						     dept.deptno有1234，那么求左连接就是emp中所有deptno为1,2的以及dept中deptno的1,2
+						
+				
+				SELECT * FROM emp RIGHT JOIN dept
+				ON emp.deptno = dept.deptno;
+				右连接原理同上，没有值得赋null
+						
+				
+				
+				【注意】
+				一般无论是left jion 还是right join 的查询结果都是以join左边的表结构为主，因此我们在连接查询
+				的时候尽量让join左边的表结构简单一些，因为左边表都会被查询，而右边表结构可以庞大一些，
+				因为我们是在右边表中查询数据然后匹配到左边表
+				所以连接查询的原则是：（或者说是优化方案）小表驱动大表。
+	
+		3）子查询
+				子查询是指嵌入在其他select语句中的select语句，也叫嵌套查询。子查询执行效率低慎用。
+				记录少时效率影响不大、图方便直接使用，记录多时最好使用其它方式替代。
+				
+			
+				#多表连接查询方式3：子查询
+				#练习1：查询accounting部门的员工信息
+				#第一次查：根据部门名称查部门编号——查dept
+				SELECT deptno FROM dept WHERE dname = 'accounting';
+				#第二次查：根据部门编号查员工信息——查emp
+				SELECT * FROM emp WHERE deptno = 1;
+				#嵌套查询
+				SELECT * FROM emp WHERE deptno = (
+					SELECT deptno FROM dept WHERE dname = 'accounting');
+				
+				#练习2：查询tony所在的部门名称
+				SELECT dname FROM dept WHERE deptno = (
+					SELECT deptno FROM emp WHERE ename = 'tony');
+					
+				#练习4：查询高于平均薪资的员工信息
+				SELECT * FROM emp WHERE sal>(
+					SELECT AVG(sal) FROM emp);
+	
+				in表示多个值
+				Select ename from emp where deptno = 2,3 错误
+				Select ename from emp where deptno IN（ 2,3 ）正确 
+	
+	
+2.Mysql函数
+	（1）upper（）:数据转大写
+			SELECT ename,UPPER(ename) FROM emp;
+								
+	（2）lower( )：数据转小写
+			SELECT ename,UPPER(ename),LOWER(UPPER(ename))  FROM emp;
+								
+	（3）length( ):求长度
+			SELECT LENGTH(ename) FROM emp;
+								
+		【注意】1个英文字母长度为1字节
+			       1个汉字长度为3字节
+			
+		【注意】数组名.length获取数组长度时，length是它的属性
+				而length( )方法是针对字符串长度的，此时是length方法
+	
+	（4）substr( )：截取
+		  substr(str,a):从str的第a个字符开始截取
+		  substr(str,a,b): 从str的第a个字符开始截取，b表示截取的长度
+				
+				SELECT ename,SUBSTR(ename,2) FROM emp;
+						
+				
+				SELECT ename,SUBSTR(ename,2,1) FROM emp;
+						
+			
+	（5）concat(a,b,c) 拼接
+			SELECT ename,CONCAT(ename,123,'hello')FROM emp;
+						
+						
+	（6）replace(字段，'被替换字母'，'替换值' )替换
+			SELECT  ename,REPLACE(ename ,'a','&')FROM emp;
+						
+	
+	（7）ifnull( ) 如果是null就替换
+			SELECT comm,IFNULL(comm,'100')FROM emp;
+						
+	
+	（8）round & ceil & floor  对小数进行操作
+			#round（X）对X四舍五入的取整数
+			#round（X，Y）仍然是对X四舍五入，Y是保留的小数位数
+				SELECT job,comm,ROUND(comm)FROM emp;
+						
+				
+				SELECT job,comm,ROUND(comm,1)FROM emp;
+						
+						
+			#ceil（X）对X向上取整
+				SELECT job,comm,CEIL(comm)FROM emp;
+					
+						
+			#floor(X) 对X向下取整
+				SELECT job,comm,FLOOR(comm) FROM emp;
+						
+						
+	（9）日期处理now()，year(时间参数)，month(时间参数)，day(时间参数)
+				SELECT NOW(), YEAR(NOW()), MONTH(NOW()),DAY(NOW());
+						
+				
+						
+				
+	（10）转义字符 \
+			' 作为sql语句符号，内容中出现单撇就会乱套，进行转义即可
+				select 'ab'cd' -- 单引号是一个SQL语句的特殊字符,这种方式查询报错，
+select 'ab\'cd' --所以用一个\转义变成普通字符
+						
+				
+3.条件查询（使用关键字）
+		
+		（1）distinct：使用distinct关键字，去除重复的记录行
+						     位置：字段名前面
+					SELECT DISTINCT loc FROM dept;
+					
+		（2）where:条件满足才查，注意:where中不能使用列别名!!
+			语法：select 字段名 from 表名 where 字段名=字段值;
+				
+				#查询地址在一区的部门
+				SELECT * FROM dept WHERE loc = '一区';
+				#查询办公地址咋二区的部门名称
+				SELECT dname FROM dept WHERE loc = '二区';
+				#查询编号小于3的部门地址
+				SELECT deptno,dname FROM dept WHERE deptno < 3;
+				UPDATE dept SET deptno = 1 WHERE dname = 'accounting';
+				UPDATE dept SET deptno = 2 WHERE dname = 'research';
+				UPDATE dept SET deptno = 3 WHERE dname = 'operating';
+				 
+				#查询地址在二区的，编号是3的部门名称
+				SELECT dname FROM dept WHERE loc = '二区' AND deptno = 3;
+				#查询编号是1或2的部门名称
+				SELECT dname FROM dept WHERE deptno = 1 OR deptno = 2;
+				SELECT dname FROM dept WHERE deptno IN(1,2);-- 效果同上
+				#查询地址在一区，或者编号是3的部门
+				SELECT * FROM dept WHERE deptno = 3 OR loc = '一区';
+				
+		（3）like:模糊查询，通配符%代表0到n个字符，通配符下划线_代表1个字符
+		
+					select * from emp where ename like 'l%' --以l开头的
+					select * from emp where ename like '%a' --以a结束的
+					select * from emp where ename like '%a%' --中间包含a的
+					select * from emp where ename like 'l__' --l后面有两个字符的 _代表一个字符位置
+					
+		（4）is (not) null : (非)空
+				select * from emp where mgr is null --过滤字段值不为空的
+
+				select * from emp where mgr is not null --过滤字段值为空的
+	
+		（5）between and 区间范围，两边都包含
+		
+				SELECT * FROM emp
+				select * from emp where sal<3000 and sal>10000
+				select * from emp where sal<=3000 and sal>=10000--等效 
+				select * from emp where sal between 3000 and 10000--等效
+				
+				SELECT * FROM emp WHERE sal BETWEEN 3500 AND 8000;
+						
+				
+		（6）limit 限制输出记录的条数
+				分数最高的记录：按分数排序后，limit n，返回前n条
+				
+				select * from emp limit 2 --列出前两条
+
+        select * from emp limit 1,2 --从第二条（1+1）开始,展示2条记录
+				
+				select * from emp limit 0,3 --从第一条（0+1）开始,展示3条记录--前三条
+				
+						
+		
+		（7）order by 字段名:升序排列
+		    order by 字段名 desc: 降序排列
+				
+				SELECT * FROM USER ORDER BY age;
+						
+				SELECT * FROM USER ORDER BY age DESC;
+						
+		
+		（8）聚合函数：根据一列统计结果
+				包含：max(),min(),avg(),sum(),count()
+				聚合函数返回的结果只有一行，称为聚合列
+				
+			求最高/低薪
+				SELECT MAX(sal) FROM emp;-- 最高薪
+				SELECT MIN(sal) FROM emp;-- 最低薪
+			#求工资的总和
+				SELECT SUM(sal) FROM emp;-- 工资总和
+			#求平均工资
+				SELECT AVG(sal) FROM emp;-- 平均工资
+			#求记录的个数
+				SELECT COUNT(*) FROM emp;-- 推荐
+				SELECT COUNT(1) FROM emp;-- 推荐，官方给出最高效
+				SELECT COUNT(comm) FROM emp;-- 不推荐，不统计null
+				count(字段）不统计null的字段
+				
+		（9）分组group：用于对查询的结果进行分组统计
+				
+				group by表示分组,
+				having 子句类似where过滤返回的结果,group by只能配合having
+			
+			#练习1：统计每个岗位的平均薪资
+				SELECT job,AVG(sal) FROM emp GROUP BY job;-- 按岗位分组
+			#练习2：统计每个岗位的员工人数并排序
+				SELECT job,COUNT(1) a FROM emp 
+				GROUP BY job 
+				ORDER BY a;
+			#练习3：统计每个部门的最高薪
+				SELECT deptno,MAX(sal) FROM emp
+				GROUP BY deptno;
+			#练习4：统计每个部门的总人数
+				SELECT deptno,SUM(1) FROM emp
+				GROUP BY deptno;
+			#练习5：统计每年入职的总人数
+				SELECT YEAR(hiredate) a,SUM(1) FROM emp
+				GROUP BY YEAR(hiredate)
+				ORDER BY a;
+			#练习6：统计每年入职的工资总支出
+				SELECT YEAR(hiredate) a,SUM(sal + IFNULL(comm,0))*12 FROM emp
+				GROUP BY YEAR(hiredate)
+				ORDER BY a;
+			
+			#2.分组之后的过滤having 类似以where ，但是group by 只能使用having
+			#练习7：统计每年入职的工资总支出，只要15年以后的数据
+				SELECT YEAR(hiredate) a ,SUM(sal + IFNULL(comm,0))*12 FROM emp
+				GROUP BY a
+				HAVING a > 2015;
+			#练习8：统计每个部门的总人数，只要人数>2的数据
+				SELECT deptno a, COUNT(1) b  FROM emp
+				GROUP BY a
+				HAVING b > 2;
+				
+	（10）where 与 having
+			误区：不要错误的认为having和group by 必须配合使用。
+			注意：where后面要跟的是数据表里的字段，不能识别聚合函数和别名
+			where和having的用
+
