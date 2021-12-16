@@ -1,0 +1,200 @@
+一，Ajax
+	1.概述
+		（1）Ajax 即Asynchronous Javascript And XML( 异步的 )
+		（2）Ajax并不是一种新的编程语言，而是多种技术的综合应用
+		（3）Ajax是 客户端 的技术，它可以实现 局部刷新 网页
+		（4）AJAX 是一种在无需重新加载整个网页的情况下，能够更新部分网页的技术。
+		（5）特点：高效，局部刷新，异步访问
+		（6）Vue框架中,提供了关于原生Ajax的优化,叫axios,全称是ajax input output system.
+	
+		
+	2.同步和异步的区别？
+			同步：保证了数据的安全，牺牲了效率（排队）
+			异步：效率高，牺牲安全
+			
+	3.开发步骤
+		1）先导入axios.min.js文件
+			
+		
+		2）发起Ajax请求，语法：
+			
+			
+	4.使用axios
+		1）导入两个js文件
+			
+		2）准备数据渲染区
+			
+		3）创建Vue对象，并在show方法中发起Ajax请求
+			
+		
+			发起Ajax请求的目的在于渲染1.json文件中的数据，并放在数据渲染区中加载
+			
+		4）测试
+				①点击按钮，调用show方法
+				
+				
+				②数据展示的流程
+				
+
+				③总结
+				
+
+二，Vue脚手架
+	1.Vue生命周期
+		三大阶段：初始化阶段、服务中阶段，销毁阶段
+		生命周期函数/钩子函数：
+		1）组件刚被创建时： beforeCreate  created
+		2）模板/挂载点 被加载时：beforeMount  created
+		3）组件被更新数据时：beforeUpdate  updated
+		4）销毁阶段：beforedestory  destoryed
+	
+	2.一些概念
+		npm: 是包管理器，从网站上，下载/更新/删除 一些包
+		webpack：是一个快速构建前端项目的工具，快速的下载，打包，压缩、混淆的诸多功能。
+		可以快速构建一个Vue项目，包括类文件（assets资源、scripts脚本、imgages图片、styles样式）
+	
+	下载脚手架之前的操作
+			
+		
+	3.安装nodejs（在第二阶段的资料包里）
+		安装nodejs,下一步下一步就可以,可以安装最新的15版本,win7的话可以安装14版本.
+		
+		使用以下dos命令提示符下执行：
+			node -v     # 查看node的版本
+			
+			
+	4.修改npm网址
+		下载Nodejs的时候，Nodejs中包含了npm包管理器,所以无需单独安装npm
+		但是npm中配置的镜像默认是国外网址，下载很慢，所以修改为淘宝镜像
+	
+		npm config get registry  #查看npm下载的网址
+			
+		
+		npm config setregistry https://registry.npm.taobao.org   #修改npm下载的网址
+			改了之后再查就是淘宝镜像
+			
+	
+	5.安装脚手架
+		在Dos命令中下载脚手架
+			C:\Users\WangYiBo>npm install vue-cli -g  #下载脚手架,下载一路没有飘红ERR.
+			C:\Users\WangYiBo>vue -V  #查看脚手架的下载版本
+			C:\Users\WangYiBo>where vue  #查看下载好的位置
+			C:\Users\WangYiBo\AppData\Roaming\npm\vue
+	
+	安装nodejs是为了npm，修改npm地址是为了下载脚手架，安装好脚手架之后是为了配置Vue项目
+
+三，Vue项目
+	1.创建空间
+		存放vue的项目代码 D:\workspace\vue
+			
+	2.下载项目
+		（1）进入工作空间
+				
+		（2）点击路径输入cmd使用DOS命令回车，可以直接进入这个文件的Dos
+				
+		（3）构建项目
+				D:\workspace\vue> vue init webpack xxx     (xxx是项目名）
+		
+		初始化webpack之后现在就已经快速构建了一个Vue项目了
+		
+	3.启动项目
+		进入下载好的项目，进入DOS命令
+		项目启动：  npm  run  dev
+		在网页中输入  localhost:8080/
+		项目停止：ctrl + c
+			
+四、Git
+	1,概述
+		是一个版本控制的产品,
+		可以管理项目的每个文件的每个版本的记录
+	
+		特点:  分布式开发的系统
+			   发布了无数的 开源项目
+	
+	2,Git中的重要角色
+	
+		1, 工作空间: 存放了项目代码的地方
+		2, 本地索引: 保存了要即将上传的文件
+		3, 本地仓库: 存了有了索引的即将上传的文件
+		4, 远程仓库: Gitee服务器,最终要上传的目的地上传流程:
+		5, 新增add:是指 从工作空间 新增到 本地索引
+		6, 提价commit: 是指 从本地索引 提交到 本地仓库
+		7, 推送push: 是指 从本地仓库 推送到 远程仓库下载流程:
+		8, 克隆clone: 是指 从远程仓库 克隆到 本地仓库
+	
+	3.使用流程
+		1, 安装Git.exe,下一步…
+		2, 去Gitee官网,注册账号
+		3, 工作空间: 在你的电脑里创建文件夹,存放即将上传的资源 ( D:\workspace\gitee )
+			
+		4, 远程仓库: 在Gitee的官网,创建远程仓库, 保存你上传好的资源
+			①打开Dos进行git的全局设置
+				#Git 全局设置:
+				gitconfig --global user.name "cgblpx"#设置注册账号
+				gitconfig --global user.email "2250432165@qq.com"#设置注册邮箱/手机号
+				
+				上面的代码会在你在git创建仓库时提示你，如下
+				
+				
+				当然也可以在Dos里创建仓库
+					#创建 git 仓库:
+						mkdir  cgb2110   
+					#创建文件夹
+						cd  cgb2110  #进入文件夹
+				
+			②使用Dos进入仓库名所在的文件夹后初始化git
+					git  init    #初始化git
+					
+			③上传本地仓库中的文件到git官网中的远程仓库
+				
+			操作步骤：
+			进入你的工作空间,创建一个1.txt,并编写内容
+			E:\workspace\gitee\cgb2110>git add .   #注意   .  点表示提交当前文件夹(cgb2110)里的所有资源
+			E:\workspace\gitee\cgb2110>git commit -m "first commit"  #提交,从本地索引到本地仓库,参数是提交的原因，引号里的可以修改
+			//E:\workspace\gitee\cgb2110>git remote add origin https://gitee.com/cgblpx/cgb2110.git (这个是要根据自己创建的远程仓库修改)   #绑定本地仓库 和 远程仓库的关系，只执行一次就好
+			E:\workspace\gitee\cgb2110>git push -u origin master   #真正实现提交数据,提交成功了就刷新Gitee的官网
+      
+			注意：①第一次提交 会弹出下面的用户名、密码框，填写码云的账号/手机号 就可以
+				   ②如果最后一部push出了错误，重新创建远程仓库,并执行官网提示的一些命令
+				   ③在git创建好远程仓库之后回有一个提示代码
+				
+一、自定义Vue组件
+	扩展了HTML的标签，可以使用更多的组件，拼接一个大的网页
+	1.在components文件夹下创建Person.vue
+		
+	
+	2.在自定义组件Person.vue中
+		（1）在<script>标签下写自定义组件，注意格式
+			
+			
+		（2）在<template>标签中写数据渲染区，注意只能有一个根标签，一般使用<div>包起来
+			
+	
+	3.在router文件夹下的App.vue中注入自定义的组件
+	    （1）在<script>组件中导入自定义组件并注册
+		
+		（2)在<template>标签中使用组件
+
+	4.刷新页面
+
+
+二、Vue项目整合ElementUI
+	1.下载
+		进入本地vue项目文件中进入DOS命令行     npm i element-ui -S
+		
+			
+	
+	2.配置
+		修改main.js文件，加入三行代码
+		//------引入了ElementUI相关的资源
+		import ElementUI from 'element-ui';
+		import 'element-ui/lib/theme-chalk/index.css';
+		Vue.use(ElementUI);//vue项目中使用了ElementUI
+		
+		
+		
+	3.参考官网使用ElementUI
+		ElementUI
+
+		测试：
+	
